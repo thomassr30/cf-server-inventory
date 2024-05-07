@@ -39,17 +39,64 @@ model Section {
   name        String
   description String?
   locationId  String
-  location    Location @relation(fields: [locationId], references: [id])
+  location    Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
   items       Item[]
 }
 
 model Item {
-  id          Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
+  sectionId String
+  type      ItemType   @default(TOOL)
+  section   Section    @relation(fields: [sectionId], references: [id])
+  tool      Tool?
+  uniform   Uniform?
+  furniture Furniture?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+enum ItemType {
+  TOOL
+  UNIFORM
+  FURNITURE
+}
+
+model Tool {
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
   quantity    Int
-  sectionId   String
-  section     Section  @relation(fields: [sectionId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  itemId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Uniform {
+  id          Int     @id @default(autoincrement())
+  code        String
+  name        String
+  size        String
+  brand       String
+  description String?
+  quantity    Int
+  item        Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  itemId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Furniture {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  quantity    Int
+  item        Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  itemId    Int      @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { LocationModule } from './location/location.module';
 import { SectionModule } from './section/section.module';
 import { ItemModule } from './item/item.module';
+import { ToolModule } from './tool/tool.module';
+import { UniformModule } from './uniform/uniform.module';
+import { FurnitureModule } from './furniture/furniture.module';
 
 @Module({
   imports: [
@@ -14,6 +17,9 @@ import { ItemModule } from './item/item.module';
     LocationModule,
     SectionModule,
     ItemModule,
+    ToolModule,
+    UniformModule,
+    FurnitureModule,
   ],
   controllers: [],
   providers: [],

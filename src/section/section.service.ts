@@ -24,11 +24,33 @@ export class SectionService {
     }
   }
 
-  async findAll(): Promise<Section[]> {
+  async findAll(): Promise<any[]> {
     try {
-      const sections = await this.prisma.section.findMany();
+      const sections = await this.prisma.section.findMany({
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          location: {
+            select: {
+              id: true,
+              name: true
+            }
+          }
+        }
+      });
 
-      return sections
+      const sectionsList = sections.map(section => {
+        return {
+          id: section.id,
+          name: section.name,
+          description: section.description,
+          location: section.location.name,
+          locationId: section.location.id
+        }
+      })
+
+      return sectionsList
     } catch (error) {
       throw new BadRequestException('Something bad happened', {
         cause: new Error(),
@@ -44,6 +66,10 @@ export class SectionService {
           locationId: id,
         },
       });
+
+      if(!sections){
+        return []
+      }
 
       return sections
     } catch (error) {
